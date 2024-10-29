@@ -1,0 +1,7 @@
+pytest-django
+isort
+black
+freezegun
+coverage
+django-coverage
+pytest-cov
