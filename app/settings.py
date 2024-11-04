@@ -162,7 +162,8 @@ if not ACCEPTED_TLDS:
     print("This script will continue in 10 seconds. We're excited how far this solution scaled for you. For science!")
     time.sleep(10)
 
-DEQUE_LENGTH = os.environ.get("CTLSSA_DEQUE_LENGTH", 100000)
+# a very large deque causes massive delays in adding data. 1000 is a tradeoff to keep things going...
+DEQUE_LENGTH = os.environ.get("CTLSSA_DEQUE_LENGTH", 1000)
 
 CERTSTREAM_SERVER_URL = os.environ.get("CTLSSA_CERTSTREAM_SERVER_URL", "wss://certstream.calidog.io/")
 

@@ -22,6 +22,10 @@ idna==3.10
     # via
     #   requests
     #   tldextract
+pysimdjson==6.0.2
+    # via -r requirements.in
+python-xz==0.5.0
+    # via -r requirements.in
 requests==2.32.3
     # via
     #   requests-file
