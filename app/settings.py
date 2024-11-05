@@ -167,6 +167,10 @@ DEQUE_LENGTH = os.environ.get("CTLSSA_DEQUE_LENGTH", 1000)
 
 CERTSTREAM_SERVER_URL = os.environ.get("CTLSSA_CERTSTREAM_SERVER_URL", "wss://certstream.calidog.io/")
 
+# when reading the .com zone or something else ridiculously large, increase this value to reduce the number of
+# database round trips. This number is fine for the nl zone.
+AUTO_WRITE_BATCH_SIZE = os.environ.get("CTLSSA_AUTO_WRITE_BATCH_SIZE", 2000)
+
 
 LOGGING = {
     "version": 1,

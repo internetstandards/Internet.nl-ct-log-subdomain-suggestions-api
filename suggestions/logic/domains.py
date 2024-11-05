@@ -12,12 +12,10 @@ from suggestions.models import Domain
 # A better number would be the average number of domains per day or so... we'll figure this value out...
 recently_added = collections.deque(maxlen=settings.DEQUE_LENGTH)
 
-# this anti pattern is used to drastically speed up database inserts, from single to bulk inserts.
-bulk_insert_data = []
-auto_write_batch_size = 2000
-
 
 def add_domains(all_domains: List[str]) -> int:
+    # this doesn't need a buffer as the amount of new domains for the .nl zone is pretty small.
+
     total_domains_added = 0
 
     # from here on out just work with the heuristics of the data we get. The heuristics are written in comments.
@@ -71,39 +69,47 @@ def add_domains(all_domains: List[str]) -> int:
     return total_domains_added
 
 
-def case_optimized_bulk_insert_domain(domain: str, processing_date: date):
-    global bulk_insert_data
+class CaseOptimizedBulkInsert:
+    # This class is an optimized version of the add_domains function that supports bulk inserts and
+    # uses some tricks to improve performance, mainly in splitting domains and subdomains using stupid functions
+    # instead of running tldextract. This approach will not work out of the box when using .co.uk domains(!)
+    # It doesn't use a deque as that slows downs performance as well...
 
-    # prevents working with "modes" which is very convoluting.
-    # don't use a deque, as that is very slow.
-    # use simple string manipulation to prevent tldextract slowing stuff down.
-    # don't filter on wildcards, those don't exist in the dataset.
-    # assume all hostname records are unique (same with the other insert method)
+    # Share some data so bulk inserts are possible.
+    new_data = []
+    auto_write_batch_size = 2000
 
-    # we can use this shortcut as there are no two level top level domains in the dutch zones
-    # the partition method is the fastest:
-    rest, delimiter, suffix = domain.rpartition(".")
-    subdomain, delimiter, domain = rest.rpartition(".")
+    # no init means a singleton
+    def __init__(self):
+        self.new_data = []
+        self.auto_write_batch_size = settings.AUTO_WRITE_BATCH_SIZE
 
-    # inserting empty subdomains is slow / expensive. This is the fastest comparison, so run this one first.
-    if subdomain == "":
-        return 0
+    def add_domain(self, domain: str, processing_date: date):
+        # wildcards do not exist in the hostname field, so no need to filter.
 
-    if suffix not in settings.ACCEPTED_TLDS:
-        return 0
+        # we can use this shortcut as there are no two level top level domains in the dutch zones
+        # the partition method is the fastest:
+        rest, delimiter, suffix = domain.rpartition(".")
+        subdomain, delimiter, domain = rest.rpartition(".")
 
-    # is_last_call is used to also add the last records that are not flushed to the database yet...
-    bulk_insert_data.append(Domain(domain=domain, subdomain=subdomain, suffix=suffix, last_seen=processing_date))
+        # inserting empty subdomains is slow / expensive. This is the fastest comparison, so run this one first.
+        if subdomain == "":
+            return 0
 
-    if len(bulk_insert_data) >= auto_write_batch_size:
-        case_optimized_write_inserts()
+        if suffix not in settings.ACCEPTED_TLDS:
+            return 0
 
-    return 1
+        self.new_data.append(Domain(domain=domain, subdomain=subdomain, suffix=suffix, last_seen=processing_date))
 
+        # add this to the buffer and just return 1 that this domain has been added, so the total number of domains
+        # can be counted.
+        if len(self.new_data) >= self.auto_write_batch_size:
+            self.write_domains()
 
-def case_optimized_write_inserts():
-    global bulk_insert_data
-    Domain.objects.bulk_create(bulk_insert_data)
-    amount_of_records = len(bulk_insert_data)
-    bulk_insert_data = []
-    return amount_of_records
+        return 1
+
+    def write_domains(self):
+        Domain.objects.bulk_create(self.new_data)
+        amount_of_records = len(self.new_data)
+        self.new_data = []
+        return amount_of_records

@@ -149,5 +149,5 @@ def test_add_domains(db, caplog):  # sourcery skip: extract-duplicate-method
     assert Domain.objects.count() == 2
     assert added == 1
 
-    # test if logging works correctly
-    assert "ingesting" in caplog.text
+    # test if logging works correctly, disabled due to flooding
+    # assert "ingesting" in caplog.text
