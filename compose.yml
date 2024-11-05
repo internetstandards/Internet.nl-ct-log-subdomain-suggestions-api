@@ -1,7 +1,15 @@
 services:
   app:
     image: internetstandards/ctlssa:latest
-    build: .
+    build: &app_build
+      context: .
+      cache_from:
+        - internetstandards/ctlssa:latest
+        - type=gha
+      cache_to:
+        - type=gha
+      args:
+        BUILDKIT_INLINE_CACHE: 1
     entrypoint: uwsgi
     ports:
       - 8000:8000
@@ -22,8 +30,8 @@ services:
       start_interval: 1s
 
   app-ingest:
-    build: .
-    image: internetstandards/ctlssa
+    build: *app_build
+    image: internetstandards/ctlssa:latest
     environment:
       CTLSSA_SECRET_KEY: '1'
       CTLSSA_DJANGO_DATABASE: production
@@ -61,8 +69,8 @@ services:
       start_interval: 1s
 
   db-migrate:
-    build: .
-    image: internetstandards/ctlssa
+    build: *app_build
+    image: internetstandards/ctlssa:latest
     restart: on-failure
     environment:
       CTLSSA_SECRET_KEY: '1'

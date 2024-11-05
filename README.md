@@ -123,6 +123,19 @@ Requirements for development are:
 - Compose
 - GNU make
 
+### Checking out the code
+
+This repository contains submodules, so after the Git clone this submodule should be initialized.
+
+    git clone git@github.com:internetstandards/Internet.nl-ct-log-subdomain-suggestions-api.git
+    git submodule update --init
+
+### Building the application
+
+Before running the application, or whenever code changes, the Docker images need to be built. For this run:
+
+    make build
+
 ### Running application
 
 To run the application for development run:

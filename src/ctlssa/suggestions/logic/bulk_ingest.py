@@ -2,6 +2,7 @@ from datetime import datetime
 
 import simdjson
 import xz
+
 from ..logic import log
 from ..logic.domains import CaseOptimizedBulkInsert
 
