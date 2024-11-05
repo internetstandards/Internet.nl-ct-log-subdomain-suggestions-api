@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
+
 import os
 import time
 from pathlib import Path
@@ -21,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY: str = os.environ.get('SECRET_KEY', '_dzlo^9d#ox6!7c9rju@=u8+4^sprqocy3s*l*ejc2yr34@&98')
+SECRET_KEY: str = os.environ.get("SECRET_KEY", "_dzlo^9d#ox6!7c9rju@=u8+4^sprqocy3s*l*ejc2yr34@&98")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -162,8 +163,7 @@ if not ACCEPTED_TLDS:
     print("This script will continue in 10 seconds. We're excited how far this solution scaled for you. For science!")
     time.sleep(10)
 
-# a very large deque causes massive delays in adding data. 1000 is a tradeoff to keep things going...
-DEQUE_LENGTH = os.environ.get("CTLSSA_DEQUE_LENGTH", 1000)
+DEQUE_LENGTH = os.environ.get("CTLSSA_DEQUE_LENGTH", 10000)
 
 CERTSTREAM_SERVER_URL = os.environ.get("CTLSSA_CERTSTREAM_SERVER_URL", "wss://certstream.calidog.io/")
 

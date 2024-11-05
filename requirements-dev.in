@@ -7,3 +7,4 @@ freezegun
 coverage
 django-coverage
 pytest-cov
+pip-tools

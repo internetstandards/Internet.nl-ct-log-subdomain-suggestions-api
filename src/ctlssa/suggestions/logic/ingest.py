@@ -1,8 +1,8 @@
 import certstream
 from django.conf import settings
 
-from suggestions.logic import log
-from suggestions.logic.domains import add_domains
+from . import log
+from .domains import add_domains
 
 
 def certstream_callback(message, context):

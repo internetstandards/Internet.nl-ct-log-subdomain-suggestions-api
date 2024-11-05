@@ -1,0 +1,82 @@
+services:
+  app:
+    image: internetstandards/ctlssa:latest
+    build: .
+    entrypoint: uwsgi
+    ports:
+      - 8000:8000
+    environment:
+      CTLSSA_SECRET_KEY: '1'
+      CTLSSA_DJANGO_DATABASE: production
+      CTLSSA_DB_ENGINE: postgresql_psycopg2
+      CTLSSA_DB_HOST: db
+      CTLSSA_CERTSTREAM_SERVER_URL: ws://certstream
+    depends_on:
+      db-migrate:
+        # wait for DB migration to be completed
+        condition: service_completed_successfully
+    healthcheck:
+      test: curl --silent --fail http://127.0.0.1:8000
+      interval: 5m
+      start_period: 30s
+      start_interval: 1s
+
+  app-ingest:
+    build: .
+    image: internetstandards/ctlssa
+    environment:
+      CTLSSA_SECRET_KEY: '1'
+      CTLSSA_DJANGO_DATABASE: production
+      CTLSSA_DB_ENGINE: postgresql_psycopg2
+      CTLSSA_DB_HOST: db
+      CTLSSA_CERTSTREAM_SERVER_URL: ws://certstream
+    entrypoint: ctlssa
+    command: ingest
+    depends_on:
+      db-migrate:
+        # wait for DB migration to be completed
+        condition: service_completed_successfully
+
+  certstream:
+    build:
+      context: vendor/certstream
+    image: internetstandards/certstream
+    environment:
+      LOG_LEVEL: error
+    depends_on:
+      # no need starting certstream before we can ingest
+      app-ingest:
+        condition: service_started
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: ctlssa
+      POSTGRES_USER: ctlssa
+      POSTGRES_PASSWORD: ctlssa
+    healthcheck:
+      test: pg_isready -U $$POSTGRES_USER -d $$POSTGRES_PASSWORD
+      interval: 5m
+      start_period: 30s
+      start_interval: 1s
+
+  db-migrate:
+    build: .
+    image: internetstandards/ctlssa
+    restart: on-failure
+    environment:
+      CTLSSA_SECRET_KEY: '1'
+      CTLSSA_DJANGO_DATABASE: production
+      CTLSSA_DB_ENGINE: postgresql_psycopg2
+      CTLSSA_DB_HOST: db
+    entrypoint: ctlssa
+    command: migrate
+    depends_on:
+      db:
+        condition: service_healthy
+
+  dev:
+    build:
+      target: dev
+    volumes:
+      - .:/src

@@ -114,19 +114,45 @@ Load up the data elsewhere using:
 
 
 ## Development
-This project does not have a managed virtual environment yet. This might be added in the future if need be.
+
+This project uses Docker and Compose for development and deployment. Common used actions for development are found in the `Makefile`.
+
+Requirements for development are:
+
+- Docker (eg: Docker for Mac, Colima, OrbStack)
+- Compose
+- GNU make
+
+### Running application
+
+To run the application for development run:
+
+    make run
+
+A web interface will be available at `http://localhost:8000`.
 
 ### Linting
+
 Run these commands before checking in. These should all pass without error.
-```
-isort .
-black .
-pytest
-```
+
+    make lint
+
+*notice*: this command autofixes trivial issues in formatting and updates the source files
+
+### Testing
+
+To run the test suite use:
+
+    make test
+
+### Development shell
+
+To open a shell with all dependencies and development tools installed run:
+
+    make dev
 
 ### Dependency management
-Run these commands to create a dependency hierarchy
-```
-pip-compile requirements.in --output-file=requirements.txt
-pip-compile requirements-dev.in --output-file=requirements-dev.txt
-```
+
+After changing requirements in any of the `.in` files update the `.txt` files using:
+
+    make requirements

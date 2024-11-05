@@ -1,0 +1,3 @@
+[submodule "vendor/certstream"]
+	path = vendor/certstream
+	url = git@github.com:CaliDog/certstream-server.git
