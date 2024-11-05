@@ -17,7 +17,7 @@ the Netherlands are being stored. You can configure this to your preferred zones
 To pre-fill the database, it's possible to import data from merklemap. This is a list of 700M hostnames which can be
 imported in bulk. A sample export containing the entire list of .nl subdomains is included as a sample fixture. This
 can be loaded up with the command `python3.12 manage.py loaddata export_merklemap_nl_zone_2024_20_25`. A newer
-fixture might be present. This contains 5.991.724 records.
+fixture might be present. This contains 5.991.724 records. -> Git refused this, so just import this by hand.
 
 
 ## What are the limits of this tool
