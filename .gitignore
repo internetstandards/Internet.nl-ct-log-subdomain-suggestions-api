@@ -4,5 +4,6 @@
 *.pyc
 .pytest_cache
 .coverage
-*.xz
 merklemap*
+suggestions_domain_25_10_2024*
+*export_merklemap_nl_zone_2024_20_25*
