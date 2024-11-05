@@ -5,7 +5,7 @@ from typing import List
 import tldextract
 from django.conf import settings
 
-from suggestions.models import Domain
+from ..models import Domain
 
 # store the latest N domains or so in a buffer, to prevent adding many duplicates. As some certificates
 # are requested a few times in a short period, while this does not add any value.

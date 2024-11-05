@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-6b!vz+!y)9b%8mm)=$a4wc-vh!--7l%-925o7l19asa0r$2h2a"
+SECRET_KEY: str = os.environ.get('SECRET_KEY', '_dzlo^9d#ox6!7c9rju@=u8+4^sprqocy3s*l*ejc2yr34@&98')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -32,7 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    "suggestions",
+    "ctlssa.suggestions",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -51,7 +51,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "app.urls"
+ROOT_URLCONF = "ctlssa.app.urls"
 
 TEMPLATES = [
     {
@@ -69,7 +69,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "app.wsgi.application"
+WSGI_APPLICATION = "ctlssa.app.wsgi.application"
 
 
 # Database
@@ -204,11 +204,11 @@ LOGGING = {
             "handlers": ["console"],
             "level": os.getenv("CTLSSA_DJANGO_LOG_LEVEL", "INFO"),
         },
-        "app": {
+        "ctlssa.app": {
             "handlers": ["console"],
             "level": os.getenv("CTLSSA_APP_LOG_LEVEL", "DEBUG"),
         },
-        "suggestions": {
+        "ctlssa.suggestions": {
             "handlers": ["console"],
             "level": os.getenv("CTLSSA_SUGGESTIONS_LOG_LEVEL", "DEBUG"),
         },

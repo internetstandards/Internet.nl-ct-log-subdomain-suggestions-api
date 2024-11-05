@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 
-from suggestions.logic.suggest import suggest_subdomains
+from .logic.suggest import suggest_subdomains
 
 
 def suggest(request):

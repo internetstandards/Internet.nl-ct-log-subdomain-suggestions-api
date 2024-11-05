@@ -1,5 +1,5 @@
-from suggestions.logic.ingest import add_domains, certstream_callback
-from suggestions.models import Domain
+from ..logic.ingest import add_domains, certstream_callback
+from ..models import Domain
 
 
 def test_certstream_callback(db):

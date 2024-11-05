@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from suggestions.logic.ingest import ingest_certstream
+from ...logic.ingest import ingest_certstream
 
 
 class Command(BaseCommand):

@@ -18,7 +18,7 @@ Including another URLconf
 from django.urls import include, path
 
 urlpatterns = [
-    path("", include("suggestions.urls")),
+    path("", include("ctlssa.suggestions.urls")),
     # No administration tools have been developed for now.
     # path("admin/", admin.site.urls),
 ]
