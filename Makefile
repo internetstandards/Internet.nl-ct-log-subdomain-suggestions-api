@@ -36,10 +36,3 @@ requirements_files = $(subst .in,.txt,$(wildcard requirements*.in))
 requirements: ${requirements_files}
 ${requirements_files}: %.txt: %.in
 	${dev} pip-compile $< --output-file $@
-
-dev dev-shell shell: requirements
-	${dev}
-
-lint fix:
-	${dev} "isort ."
-	${dev} "black ."

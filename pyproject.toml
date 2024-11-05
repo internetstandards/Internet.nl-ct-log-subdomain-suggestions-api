@@ -11,3 +11,18 @@ optional-dependencies = {dev = {file = ["requirements-dev.txt"]}, deploy = {file
 
 [project.scripts]
 ctlssa = "ctlssa.manage:main"
+
+[tool.setuptools.package-data]
+ctlssa = ["*.json"]
+
+[build-system]
+requires = [
+    "setuptools>=60",
+    "setuptools-scm>=8.0"]
+
+[tool.black]
+line-length = 120
+exclude = "vendor/|docs/|\\..+/"
+
+[tool.isort]
+line_length = 120

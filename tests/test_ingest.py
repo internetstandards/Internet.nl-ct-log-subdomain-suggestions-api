@@ -1,5 +1,5 @@
-from ..logic.ingest import add_domains, certstream_callback
-from ..models import Domain
+from ctlssa.suggestions.logic.ingest import add_domains, certstream_callback
+from ctlssa.suggestions.models import Domain
 
 
 def test_certstream_callback(db):
@@ -107,7 +107,10 @@ def test_certstream_callback(db):
                 },
             },
             "seen": 1730205715.766654,
-            "source": {"name": "Google 'Argon2025h1' log", "url": "https://ct.googleapis.com/logs/us1/argon2025h1/"},
+            "source": {
+                "name": "Google 'Argon2025h1' log",
+                "url": "https://ct.googleapis.com/logs/us1/argon2025h1/",
+            },
             "update_type": "X509LogEntry",
         },
         "message_type": "certificate_update",

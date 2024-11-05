@@ -1,7 +1,7 @@
 from django.core.management import call_command
 from freezegun import freeze_time
 
-from suggestions.logic.suggest import suggest_subdomains
+from ctlssa.suggestions.logic.suggest import suggest_subdomains
 
 
 def test_suggest_subdomains(db):
