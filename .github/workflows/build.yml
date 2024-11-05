@@ -25,6 +25,9 @@ jobs:
           VERSION=$(git describe --tags --abbrev=0)-$(git log -1 --pretty=format:%h)
           make build build_args=--build-arg=VERSION=${VERSION:-0.0.0-dev0}
 
+      - name: check
+        run: make check
+
       - name: lint
         run: make lint
 

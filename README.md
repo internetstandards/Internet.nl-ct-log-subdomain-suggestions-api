@@ -137,19 +137,31 @@ Before running the application, or whenever code changes, the Docker images need
 
     make build
 
+Running the build step before every command is recommended to ensure the images are up to date, that's why it's included in all the command below. It can be omitted if you know you don't need it.
+
 ### Running application
 
-To run the application for development run:
+To run the application for development use:
 
-    make run
+    make build run
+
+This will start a full development stack with:
+
+  - uWSGI application
+  - ingest
+  - certstream server
+  - postgreSQL server
+  - database migration
 
 A web interface will be available at `http://localhost:8001`.
+
+Compose will watch for file changes and restart the required services accordingly.
 
 ### Linting
 
 Run these commands before checking in. These should all pass without error.
 
-    make lint
+    make build lint
 
 *notice*: this command autofixes trivial issues in formatting and updates the source files
 
@@ -157,25 +169,38 @@ Run these commands before checking in. These should all pass without error.
 
 To run the test suite use:
 
-    make test
+    make build test
+
+To rerun tests every time a file changes use:
+
+    make build test-watch
 
 ### Development shell
 
-To open a shell with all dependencies and development tools installed run:
+To open a shell with all dependencies and development tools installed, first bring the project up, then run:
 
-    make dev
+    make build dev
+
+From here you can run the `ctlssa` command to perform Django `./manage.py` functions like:
+
+    ctlssa makemigrations
+
+    ctlssa shell
+
+    ctlssa loadfixtures testdata
+
+    ctlssa bulk_ingest --file data.json
+
+For all commands run:
+
+    ctlssa --help
 
 ### Dependency management
 
 After changing requirements in any of the `.in` files update the `.txt` files using:
 
-    make requirements
+    make build requirements
 
 ### Database shell (postgresql)
 
     make dbshell
-
-Or alternatively you can:
-
-    docker ps
-    docker exec -ti internetnl-ctlssa-db-1 psql --user ctlssa

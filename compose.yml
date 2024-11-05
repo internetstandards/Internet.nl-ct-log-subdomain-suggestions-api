@@ -32,6 +32,8 @@ services:
       db-migrate:
         # wait for DB migration to be completed
         condition: service_completed_successfully
+      app-ingest:
+        condition: service_started
     healthcheck:
       test: curl --silent --fail http://127.0.0.1:8001
       interval: 5m
@@ -107,6 +109,13 @@ services:
       target: dev
     volumes:
       - .:/src
+      - ./.root:/root
+    depends_on:
+      app:
+        condition: service_healthy
+
+    profiles:
+      - dev
 
 volumes:
   postgres:
