@@ -10,6 +10,11 @@ services:
         - type=gha
       args:
         BUILDKIT_INLINE_CACHE: 1
+    develop: &app_develop
+      watch:
+        - path: src/
+          action: sync+restart
+          target: /src/src/
     entrypoint: uwsgi
     ports:
       - 8000:8000
@@ -19,6 +24,10 @@ services:
       CTLSSA_DB_ENGINE: postgresql_psycopg2
       CTLSSA_DB_HOST: db
       CTLSSA_CERTSTREAM_SERVER_URL: ws://certstream
+    # uwsgi reloads on SIGTERM, so use SIGINT instead
+    # https://uwsgi-docs.readthedocs.io/en/latest/Management.html#signals-for-controlling-uwsgi
+    stop_signal: SIGINT
+    restart: always
     depends_on:
       db-migrate:
         # wait for DB migration to be completed
@@ -31,6 +40,7 @@ services:
 
   app-ingest:
     build: *app_build
+    develop: *app_develop
     image: internetstandards/ctlssa:latest
     environment:
       CTLSSA_SECRET_KEY: '1'
@@ -40,6 +50,10 @@ services:
       CTLSSA_CERTSTREAM_SERVER_URL: ws://certstream
     entrypoint: ctlssa
     command: ingest
+    restart: always
+    # certstream library only listens to SIGINT
+    # https://github.com/CaliDog/certstream-python/blob/master/certstream/core.py#L56
+    stop_signal: SIGINT
     depends_on:
       db-migrate:
         # wait for DB migration to be completed
@@ -51,6 +65,7 @@ services:
     image: internetstandards/certstream
     environment:
       LOG_LEVEL: error
+    restart: always
     depends_on:
       # no need starting certstream before we can ingest
       app-ingest:
@@ -58,6 +73,7 @@ services:
 
   db:
     image: postgres:15
+    restart: always
     environment:
       POSTGRES_DB: ctlssa
       POSTGRES_USER: ctlssa
@@ -67,9 +83,12 @@ services:
       interval: 5m
       start_period: 30s
       start_interval: 1s
+    volumes:
+      - postgres:/var/lib/postgresql/data
 
   db-migrate:
     build: *app_build
+    develop: *app_develop
     image: internetstandards/ctlssa:latest
     restart: on-failure
     environment:
@@ -88,3 +107,6 @@ services:
       target: dev
     volumes:
       - .:/src
+
+volumes:
+  postgres:

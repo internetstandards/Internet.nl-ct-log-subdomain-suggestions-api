@@ -2,13 +2,14 @@ SHELL = /bin/bash
 
 ctlssa = docker compose run -ti app
 dev = docker compose run -i -v ${PWD}/.root:/root --rm dev
+db = docker compose exec -i db
 
 # run this before/after checking in/out the source
 all: build lint test
 
 # run the entire project
 run up: requirements
-	docker compose up --build --remove-orphans --watch
+	COMPOSE_PROJECT_NAME=internetnl-ctlssa docker compose up --remove-orphans --watch
 
 # make migration files
 makemigrations:
@@ -17,6 +18,9 @@ makemigrations:
 # run development shell
 dev dev-shell shell:
 	${dev}
+
+dbshell:
+	${db} psql --user ctlssa
 
 # fix/check linting issues
 lint fix:

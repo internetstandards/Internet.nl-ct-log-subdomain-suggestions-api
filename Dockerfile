@@ -10,9 +10,6 @@ RUN pip install -r requirements.txt
 
 ADD README.md /src
 ADD pyproject.toml /src
-ADD src /src/src
-
-RUN pip install .
 
 FROM build AS dev
 
@@ -22,12 +19,18 @@ WORKDIR /src
 ADD requirements-dev.txt /src
 RUN pip install -r requirements-dev.txt
 
+ADD src /src/src
+RUN pip install --editable .
+
 ENV DJANGO_SETTINGS_MODULE ctlssa.app.settings
 
 ENTRYPOINT [ "bash", "-c" ]
 CMD [ "bash" ]
 
 FROM build AS app
+
+ADD src /src/src
+RUN pip install --editable .
 
 ENV DJANGO_SETTINGS_MODULE ctlssa.app.settings
 ENV UWSGI_MODULE ctlssa.app.wsgi
