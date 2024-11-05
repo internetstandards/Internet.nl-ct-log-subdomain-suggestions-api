@@ -107,6 +107,7 @@ services:
       target: dev
     volumes:
       - .:/src
+      - ./.root:/root
 
 volumes:
   postgres:
