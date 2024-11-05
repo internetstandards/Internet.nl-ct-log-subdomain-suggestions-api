@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta, timezone
 
-from suggestions.models import Domain
+from ..models import Domain
 
 
 def suggest_subdomains(domain: str, suffix: str = "nl", period_in_days: int = 365):

@@ -4,3 +4,6 @@ tldextract
 django<5
 python-xz
 pysimdjson
+
+# https://docs.djangoproject.com/en/5.1/ref/databases/#postgresql-notes
+psycopg>3.1.8

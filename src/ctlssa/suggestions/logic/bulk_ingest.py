@@ -2,9 +2,8 @@ from datetime import datetime
 
 import simdjson
 import xz
-
-from suggestions.logic import log
-from suggestions.logic.domains import CaseOptimizedBulkInsert
+from ..logic import log
+from ..logic.domains import CaseOptimizedBulkInsert
 
 
 def ingest_merklemap(file: str = "merklemap_data.jsonl"):

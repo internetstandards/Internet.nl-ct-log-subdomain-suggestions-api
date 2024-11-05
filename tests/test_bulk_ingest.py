@@ -1,12 +1,13 @@
+import pathlib
 from datetime import datetime
 
-from suggestions.logic.bulk_ingest import ingest_merklemap
-from suggestions.logic.domains import CaseOptimizedBulkInsert
-from suggestions.models import Domain
+from ctlssa.suggestions.logic.bulk_ingest import ingest_merklemap
+from ctlssa.suggestions.logic.domains import CaseOptimizedBulkInsert
+from ctlssa.suggestions.models import Domain
 
 
-def test_ingest_merklemap(db):
-    ingest_merklemap("suggestions/tests/sample_merklemap_data.jsonl")
+def test_ingest_merklemap(db, testdata):
+    ingest_merklemap(str(testdata / "sample_merklemap_data.jsonl"))
     assert Domain.objects.count() == 33
 
     # test that the Domain objects are not stored or shared between CaseOptimizedBulkInsert instances.
@@ -14,7 +15,7 @@ def test_ingest_merklemap(db):
     bulk_insert.write_domains()
     assert Domain.objects.count() == 33
 
-    ingest_merklemap("suggestions/tests/sample_merklemap_data.xz")
+    ingest_merklemap(str(testdata / "sample_merklemap_data.xz"))
     assert Domain.objects.count() == 66
 
 

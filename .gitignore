@@ -4,6 +4,9 @@
 *.pyc
 .pytest_cache
 .coverage
+build/
 merklemap*
 suggestions_domain_25_10_2024*
 *export_merklemap_nl_zone_2024_20_25*
+.root/
+*.egg-info

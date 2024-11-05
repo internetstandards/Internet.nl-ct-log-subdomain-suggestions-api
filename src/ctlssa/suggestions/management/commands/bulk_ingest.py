@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from suggestions.logic.bulk_ingest import ingest_merklemap
+from ...logic.bulk_ingest import ingest_merklemap
 
 
 class Command(BaseCommand):
