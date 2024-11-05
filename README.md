@@ -1,16 +1,24 @@
 # Internet.nl Certificate Transparency Log Subdomain Suggestions
 
+
 ## What does this do / Intended use case
 The goal is to replace subdomain suggestions from crt.sh with higher uptime and faster response times. This way it can
 be used in other applications, such as the internet.nl dashboard, to suggest possible subdomains to end users.
+
 
 ## How does it work
 This tool ingests subdomains from public certificate transparency logs using a connection from a certstream server. A
 web interface allows for querying the stored data, which results in a list of known subdomains.
 
-There are several key-optimizations performed that reduce the amount of subdomains stored in the database. The most
+There are several optimizations performed that reduce the amount of subdomains stored in the database. The most
 important one is the list of allowed tlds that are being stored. By default only domains relevant to the Kingdom of
-the Netherlands are being stored.
+the Netherlands are being stored. You can configure this to your preferred zones.
+
+To pre-fill the database, it's possible to import data from merklemap. This is a list of 700M hostnames which can be
+imported in bulk. A sample export containing the entire list of .nl subdomains is included as a sample fixture. This
+can be loaded up with the command `python3.12 manage.py loaddata export_merklemap_nl_zone_2024_20_25`. A newer
+fixture might be present. This contains 5.991.724 records. -> Git refused this, so just import this by hand.
+
 
 ## What are the limits of this tool
 The limits have not yet been discovered and no optimizations have been performed yet, aside from a few proactive
@@ -25,6 +33,7 @@ The goal is to being able to run this on medium sized virtual machines with just
 ram. That should be enough for the Netherlands and most EU countries. We've not tried to see if this solution is 'web
 scale'.
 
+
 ## How to ingest data from cerstream
 Configure `CTLSSA_CERTSTREAM_SERVER_URL` to point to a certstream-server instance. The default points to a certstream
 server hosted by the creator of certstream, calidog. This is great for testing and development, but don't use it for
@@ -37,6 +46,7 @@ After configuration run the following command:
 ```python manage.py ingest```
 
 This command should run forever. In case your certstream server is down it will patiently wait until the server is up.
+
 
 ## How to query the results
 The webserver can be started with the command:
@@ -52,7 +62,7 @@ Configuration is done via environment variables, but can also be hardcoded in th
 Everything is configured with environment variables and fallbacks. Environment variables of the app are prefixed with
 CTLSSA_, so they stand out in your `env`.
 
-CTLSSA_ACCEPTED_TLDS: Comma separted string with the zones you want subdomains from.
+CTLSSA_ACCEPTED_TLDS: Comma separated string with the zones you want subdomains from.
 The default is set to "nl,aw,cw,sr,sx,bq,frl,amsterdam,politie". Mileage will vary with .com, .net, .org zones and
 we expect ingestion not to be fast enough.
 
@@ -85,6 +95,22 @@ Once this assumption doesn't hold optimizations are needed. There are several op
 parallel inserts from multiple processes, database partitioning, index ordering, reducing the amount of indexes by
 merging domain+suffix and so on. Other solutions might work as well. None of these have been tried yet, but you might
 need them. If you do, please get in touch with the repository owner so this project can be optimized for everyone.
+
+
+## Creating a fixture from merklemap
+
+These steps remove all existing data and create a new fixture. This is useful for developers that want to create a
+specific fixture on their own machines. Data is licensed cc by nc sa merklemap.
+
+- `rm db.sqlite3 file`
+- `python3 manage.py migrate`
+- `python3.12 manage.py bulk_ingest --file=merklemap_dns_records_database_25_10_2024.xz` (or decompressed .jsonl)
+- `python3.12 manage.py dumpdata suggestions.domain > suggestions_domain_25_10_2024.json`
+- `xz -9 -c suggestions_domain_25_10_2024.json > suggestions_domain_25_10_2024.json.xz`
+
+Load up the data elsewhere using:
+
+`python3.12 manage.py loaddata export_merklemap_nl_zone_2024_20_25`
 
 
 ## Development

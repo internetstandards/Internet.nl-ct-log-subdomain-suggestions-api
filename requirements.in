@@ -1,6 +1,6 @@
--c requirements.txt
-
 colorlog
 certstream
 tldextract
 django<5
+python-xz
+pysimdjson

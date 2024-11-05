@@ -145,8 +145,9 @@ def test_add_domains(db, caplog):  # sourcery skip: extract-duplicate-method
     assert Domain.objects.count() == 1
 
     # multiple domains can be added in one setting, this will add only one.
-    add_domains(["test.nu.nl", "test2.nu.nl", "nu.nl"])
+    added = add_domains(["test.nu.nl", "test2.nu.nl", "nu.nl"])
     assert Domain.objects.count() == 2
+    assert added == 1
 
-    # test if logging works correctly
-    assert "ingesting" in caplog.text
+    # test if logging works correctly, disabled due to flooding
+    # assert "ingesting" in caplog.text
