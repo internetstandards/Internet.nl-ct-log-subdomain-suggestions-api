@@ -170,3 +170,12 @@ To open a shell with all dependencies and development tools installed run:
 After changing requirements in any of the `.in` files update the `.txt` files using:
 
     make requirements
+
+### Database shell (postgresql)
+
+    make dbshell
+
+Or alternatively you can:
+
+    docker ps
+    docker exec -ti internetnl-ctlssa-db-1 psql --user ctlssa
