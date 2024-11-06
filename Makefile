@@ -4,12 +4,14 @@ ctlssa = docker compose run -ti app
 dev = docker compose run -i --rm dev
 db = docker compose exec -i db
 
+project_name = internetnl-ctlssa
+
 # run this before/after checking in/out the source
 all: build lint test
 
 # run the entire project
 run up:
-	COMPOSE_PROJECT_NAME=internetnl-ctlssa docker compose up --remove-orphans --watch
+	COMPOSE_PROJECT_NAME=${project_name} docker compose up --remove-orphans --watch
 
 # make migration files
 makemigrations:
@@ -60,3 +62,9 @@ build:
 
 push_images:
 	docker compose --push app certstream
+
+# remove all runtime state and cache from the project
+mrproper:
+	docker compose rm --volumes --force --stop
+	docker system prune --filter label=com.docker.compose.project=${project_name} --all --force --volumes
+	rm -fr build/ src/*.egg-info

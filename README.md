@@ -204,3 +204,9 @@ After changing requirements in any of the `.in` files update the `.txt` files us
 ### Database shell (postgresql)
 
     make dbshell
+
+### Reset
+
+If nothing else works, try resetting the project state by deleting all runtime state and caches using:
+
+    make mrproper
