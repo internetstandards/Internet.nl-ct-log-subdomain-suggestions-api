@@ -22,12 +22,13 @@ fixture might be present. This contains 5.991.724 records. -> Git refused this, 
 
 ## What are the limits of this tool
 The limits have not yet been discovered and no optimizations have been performed yet, aside from a few proactive
-database indexes. It is expected to being able to store about a years worth of data from the .nl zone. This means
-about 5 million domains with an estimated 50 million subdomains, each which will have a new certificate every 90 days.
-In total about 200 million records per year. This is the same in most EU countries. There is no expectation that this
-tool will work quickly on the combined com/net/org zones. Although some partitioning and smarter inserting might just
-do the trick. For the Netherlands the total number of certificate renewals seems to be much lower for subdomains,
-between 0.5 to 2 per second.
+database indexes. It is expected to being able to store about a years worth of data from the .nl zone. The preload
+from merklemap will load up 6 million subdomains (which is much lower than the expected 50 million).
+
+For the Netherlands the total number of certificate renewals seems to be much lower for subdomains,
+between 0.5 to 2 per second. Each subdomain which will have a new certificate every 90 days. This is the same in
+most EU countries. There is no expectation that this tool will work quickly on the combined com/net/org zones.
+Although some partitioning and smarter inserting might just do the trick.
 
 The goal is to being able to run this on medium sized virtual machines with just a few cores and a few gigabytes of
 ram. That should be enough for the Netherlands and most EU countries. We've not tried to see if this solution is 'web

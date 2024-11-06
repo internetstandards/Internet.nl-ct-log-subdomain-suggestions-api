@@ -31,6 +31,12 @@ lint fix:
 test:
 	${dev} "pytest ./tests/"
 
+testcase:
+	# support extra verbosity in testcases so differences can be copy-pasted when needed and to see exactly
+	# what is happening.
+	# make testcase case=filter condition
+	${dev} "pytest -vvv -k ${case} ./tests/"
+
 # updates requirements.txt files when requirements.in files have changes
 requirements_files = $(subst .in,.txt,$(wildcard requirements*.in))
 requirements: ${requirements_files}
