@@ -3,18 +3,20 @@ SHELL = /bin/bash
 dev = docker compose --profile=dev run -i --rm dev
 db = docker compose exec -i db
 
-project_name = internetnl-ctlssa
-
 # run this before/after checking in/out the source
 all: build lint test
 
 # run the entire project
 run up:
-	COMPOSE_PROJECT_NAME=${project_name} docker compose up --remove-orphans --watch
+	docker compose up --remove-orphans --watch
 
 # make migration files
 makemigrations:
-	${ctlssa} makemigrations
+	${dev} "ctlssa makemigrations"
+
+# load testdatta fixture
+testdata:
+	${dev} "ctlssa loaddata testdata"
 
 # run development shell
 dev dev-shell shell:
@@ -65,5 +67,5 @@ push_images:
 # remove all runtime state and cache from the project
 mrproper:
 	docker compose rm --volumes --force --stop
-	docker system prune --filter label=com.docker.compose.project=${project_name} --all --force --volumes
+	docker system prune --filter label=com.docker.compose.project="$(shell docker compose config --format yaml | sed -nE 's/^name: (.*)/\1/p')" --all --force --volumes
 	rm -fr build/ src/*.egg-info

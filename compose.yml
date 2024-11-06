@@ -107,6 +107,11 @@ services:
   dev:
     build:
       target: dev
+    environment:
+      CTLSSA_SECRET_KEY: '1'
+      CTLSSA_DJANGO_DATABASE: production
+      CTLSSA_DB_ENGINE: postgresql_psycopg2
+      CTLSSA_DB_HOST: db
     volumes:
       - .:/src
       - ./.root:/root
