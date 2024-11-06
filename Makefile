@@ -1,10 +1,8 @@
 SHELL = /bin/bash
 
-project_name = internetnl-ctlssa
-
-ctlssa = COMPOSE_PROJECT_NAME=${project_name} docker compose run -ti app
-dev = COMPOSE_PROJECT_NAME=${project_name} docker compose run -i --rm dev
-db = COMPOSE_PROJECT_NAME=${project_name} docker compose exec -i db
+ctlssa = docker compose run -ti app
+dev = docker compose run -i --rm dev
+db = docker compose exec -i db
 
 # run this before/after checking in/out the source
 all: build lint test
@@ -66,5 +64,5 @@ push_images:
 # remove all runtime state and cache from the project
 mrproper:
 	docker compose rm --volumes --force --stop
-	docker system prune --filter label=com.docker.compose.project=${project_name} --all --force --volumes
+	docker system prune --filter label=com.docker.compose.project="$(shell docker compose config --format yaml | sed -nE 's/^name: (.*)/\1/p')" --all --force --volumes
 	rm -fr build/ src/*.egg-info
