@@ -1,17 +1,17 @@
 SHELL = /bin/bash
 
-ctlssa = docker compose run -ti app
-dev = docker compose run -i --rm dev
-db = docker compose exec -i db
-
 project_name = internetnl-ctlssa
+
+ctlssa = COMPOSE_PROJECT_NAME=${project_name} docker compose run -ti app
+dev = COMPOSE_PROJECT_NAME=${project_name} docker compose run -i --rm dev
+db = COMPOSE_PROJECT_NAME=${project_name} docker compose exec -i db
 
 # run this before/after checking in/out the source
 all: build lint test
 
 # run the entire project
 run up:
-	COMPOSE_PROJECT_NAME=${project_name} docker compose up --remove-orphans --watch
+	docker compose up --remove-orphans --watch
 
 # make migration files
 makemigrations:
