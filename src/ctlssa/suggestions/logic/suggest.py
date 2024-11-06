@@ -18,6 +18,9 @@ def suggest_subdomains(domain: str, suffix: str = "nl", period_in_days: int = 36
 
     # silently fall back if the date value is not according to specification
     with contextlib.suppress(ValueError):
+        # suppress "isoformat must be a string"
+        if not max_date:
+            max_date = ""
         max_date = date.fromisoformat(max_date)
 
     if max_date:

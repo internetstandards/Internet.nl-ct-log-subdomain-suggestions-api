@@ -53,8 +53,8 @@ This command should run forever. In case your certstream server is down it will 
 The webserver can be started with the command:
 ```python manage.py runserver```
 
-When you visit the web interface at http://localhost:8000/ you will see a blank JSON response. Use the following
-parameters to retrieve data: `http://localhost:8000/?domain=example&suffix=nl&period=365`
+When you visit the web interface at http://localhost:8001/ you will see a blank JSON response. Use the following
+parameters to retrieve data: `http://localhost:8001/?domain=example&suffix=nl&period=365`
 
 
 ## Further configuration options
@@ -143,7 +143,7 @@ To run the application for development run:
 
     make run
 
-A web interface will be available at `http://localhost:8000`.
+A web interface will be available at `http://localhost:8001`.
 
 ### Linting
 
