@@ -1,22 +1,32 @@
 SHELL = /bin/bash
 
+ctlssa = docker compose exec -ti app
 dev = docker compose --profile=dev run -i --rm dev
 db = docker compose exec -i db
 
 # run this before/after checking in/out the source
-all: build lint test
+all: build lint up test
 
 # run the entire project
-run up:
+run:
 	docker compose up --remove-orphans --watch
+
+up:
+	docker compose up --remove-orphans --detach
+
+down:
+	docker compose down --remove-orphans
+
+rm:
+	docker compose rm --force --stop
 
 # make migration files
 makemigrations:
-	${dev} "ctlssa makemigrations"
+	${ctlssa} "ctlssa makemigrations"
 
 # load testdatta fixture
 testdata:
-	${dev} "ctlssa loaddata testdata"
+	${ctlssa} "ctlssa loaddata testdata"
 
 # run development shell
 dev dev-shell shell:
@@ -62,7 +72,7 @@ build:
 	docker compose build ${build_args}
 
 push_images:
-	docker compose --push app certstream
+	docker compose push app certstream
 
 # remove all runtime state and cache from the project
 mrproper:

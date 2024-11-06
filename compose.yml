@@ -1,10 +1,10 @@
 services:
   app:
-    image: internetstandards/ctlssa:latest
+    image: ghcr.io/internetstandards/ctlssa:latest
     build: &app_build
       context: .
       cache_from:
-        - internetstandards/ctlssa:latest
+        - ghcr.io/internetstandards/ctlssa:latest
         - type=gha
       cache_to:
         - type=gha
@@ -45,7 +45,7 @@ services:
   app-ingest:
     build: *app_build
     develop: *app_develop
-    image: internetstandards/ctlssa:latest
+    image: ghcr.io/internetstandards/ctlssa:latest
     environment:
       CTLSSA_SECRET_KEY: '1'
       CTLSSA_DJANGO_DATABASE: production
@@ -71,7 +71,7 @@ services:
   certstream:
     build:
       context: vendor/certstream
-    image: internetstandards/certstream
+    image: ghcr.io/internetstandards/certstream:latest
     environment:
       LOG_LEVEL: error
     restart: always
@@ -100,7 +100,7 @@ services:
   db-migrate:
     build: *app_build
     develop: *app_develop
-    image: internetstandards/ctlssa:latest
+    image: ghcr.io/internetstandards/ctlssa:latest
     restart: on-failure
     environment:
       CTLSSA_SECRET_KEY: '1'
@@ -124,9 +124,6 @@ services:
     volumes:
       - .:/src
       - ./.root:/root
-    depends_on:
-      app:
-        condition: service_healthy
 
     profiles:
       - dev
