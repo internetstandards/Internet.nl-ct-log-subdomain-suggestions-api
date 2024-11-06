@@ -29,6 +29,8 @@ services:
     stop_signal: SIGINT
     restart: always
     depends_on:
+      db:
+        condition: service_healthy
       db-migrate:
         # wait for DB migration to be completed
         condition: service_completed_successfully
@@ -56,10 +58,15 @@ services:
     # certstream library only listens to SIGINT
     # https://github.com/CaliDog/certstream-python/blob/master/certstream/core.py#L56
     stop_signal: SIGINT
+    stop_grace_period: 3s
     depends_on:
+      db:
+        condition: service_healthy
       db-migrate:
         # wait for DB migration to be completed
         condition: service_completed_successfully
+      certstream:
+        condition: service_healthy
 
   certstream:
     build:
@@ -68,10 +75,11 @@ services:
     environment:
       LOG_LEVEL: error
     restart: always
-    depends_on:
-      # no need starting certstream before we can ingest
-      app-ingest:
-        condition: service_started
+    healthcheck:
+      test: wget -q 127.0.0.1:4000 -O /dev/null
+      interval: 5m
+      start_period: 30s
+      start_interval: 1s
 
   db:
     image: postgres:15
@@ -85,6 +93,7 @@ services:
       interval: 5m
       start_period: 30s
       start_interval: 1s
+    cpu_percent: ${CERTSTREAM_CPU_PERCENT:-10}
     volumes:
       - postgres:/var/lib/postgresql/data
 
