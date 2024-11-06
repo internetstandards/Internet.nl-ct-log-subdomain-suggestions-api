@@ -5,76 +5,44 @@
 #    pip-compile
 #
 asgiref==3.8.1
-    # via
-    #   -c requirements.txt
-    #   django
+    # via django
 certifi==2024.8.30
-    # via
-    #   -c requirements.txt
-    #   requests
+    # via requests
 certstream==1.12
-    # via
-    #   -c requirements.txt
-    #   -r requirements.in
+    # via -r requirements.in
 charset-normalizer==3.4.0
-    # via
-    #   -c requirements.txt
-    #   requests
+    # via requests
 colorlog==6.8.2
-    # via
-    #   -c requirements.txt
-    #   -r requirements.in
+    # via -r requirements.in
 django==4.2.16
-    # via
-    #   -c requirements.txt
-    #   -r requirements.in
+    # via -r requirements.in
 filelock==3.16.1
-    # via
-    #   -c requirements.txt
-    #   tldextract
+    # via tldextract
 idna==3.10
     # via
-    #   -c requirements.txt
     #   requests
     #   tldextract
+psycopg==3.2.3
+    # via -r requirements.in
 pysimdjson==6.0.2
     # via -r requirements.in
 python-xz==0.5.0
     # via -r requirements.in
-psycopg==3.2.3
-    # via
-    #   -c requirements.txt
-    #   -r requirements.in
 requests==2.32.3
     # via
-    #   -c requirements.txt
     #   requests-file
     #   tldextract
 requests-file==2.1.0
-    # via
-    #   -c requirements.txt
-    #   tldextract
+    # via tldextract
 sqlparse==0.5.1
-    # via
-    #   -c requirements.txt
-    #   django
+    # via django
 termcolor==2.5.0
-    # via
-    #   -c requirements.txt
-    #   certstream
+    # via certstream
 tldextract==5.1.2
-    # via
-    #   -c requirements.txt
-    #   -r requirements.in
+    # via -r requirements.in
 typing-extensions==4.12.2
-    # via
-    #   -c requirements.txt
-    #   psycopg
+    # via psycopg
 urllib3==2.2.3
-    # via
-    #   -c requirements.txt
-    #   requests
+    # via requests
 websocket-client==1.8.0
-    # via
-    #   -c requirements.txt
-    #   certstream
+    # via certstream

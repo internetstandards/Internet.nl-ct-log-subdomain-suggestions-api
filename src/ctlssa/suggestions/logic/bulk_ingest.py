@@ -2,6 +2,7 @@ from datetime import datetime
 
 import simdjson
 import xz
+
 from ..logic import log
 from ..logic.domains import CaseOptimizedBulkInsert
 
@@ -67,6 +68,8 @@ def ingest_merklemap(file: str = "merklemap_data.jsonl"):
         with my_open(file) as f:
             for line in f:
                 data = parser.parse(line)
+                # If you load up the django fixture here instead of the merklemap file, you'll get an integer
+                # error here. But no try-except as that takes extra time to process.
                 hostname = data["hostname"]
                 # performance trick from the simdjson manual
                 del data

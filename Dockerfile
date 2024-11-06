@@ -10,9 +10,6 @@ RUN pip install -r requirements.txt
 
 ADD README.md /src
 ADD pyproject.toml /src
-ADD src /src/src
-
-RUN pip install .
 
 FROM build AS dev
 
@@ -22,6 +19,9 @@ WORKDIR /src
 ADD requirements-dev.txt /src
 RUN pip install -r requirements-dev.txt
 
+ADD src /src/src
+RUN pip install --editable .
+
 ENV DJANGO_SETTINGS_MODULE ctlssa.app.settings
 
 ENTRYPOINT [ "bash", "-c" ]
@@ -29,12 +29,19 @@ CMD [ "bash" ]
 
 FROM build AS app
 
+ADD src /src/src
+RUN pip install --editable .
+
 ENV DJANGO_SETTINGS_MODULE ctlssa.app.settings
 ENV UWSGI_MODULE ctlssa.app.wsgi
-ENV UWSGI_HTTP_SOCKET=:8000
+ENV UWSGI_HTTP_SOCKET=:8001
 ENV UWSGI_MASTER=1
 ENV UWSGI_UID=nobody
+ENV DJANGO_PORT=8001
 
-EXPOSE 8000
+EXPOSE 8001
+
+ARG VERSION=0.0.0-dev0
+ENV SETUPTOOLS_SCM_PRETEND_VERSION=$VERSION
 
 ENTRYPOINT [ "ctlssa" ]

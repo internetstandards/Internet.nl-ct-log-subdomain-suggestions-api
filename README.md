@@ -22,12 +22,13 @@ fixture might be present. This contains 5.991.724 records. -> Git refused this, 
 
 ## What are the limits of this tool
 The limits have not yet been discovered and no optimizations have been performed yet, aside from a few proactive
-database indexes. It is expected to being able to store about a years worth of data from the .nl zone. This means
-about 5 million domains with an estimated 50 million subdomains, each which will have a new certificate every 90 days.
-In total about 200 million records per year. This is the same in most EU countries. There is no expectation that this
-tool will work quickly on the combined com/net/org zones. Although some partitioning and smarter inserting might just
-do the trick. For the Netherlands the total number of certificate renewals seems to be much lower for subdomains,
-between 0.5 to 2 per second.
+database indexes. It is expected to being able to store about a years worth of data from the .nl zone. The preload
+from merklemap will load up 6 million subdomains (which is much lower than the expected 50 million).
+
+For the Netherlands the total number of certificate renewals seems to be much lower for subdomains,
+between 0.5 to 2 per second. Each subdomain which will have a new certificate every 90 days. This is the same in
+most EU countries. There is no expectation that this tool will work quickly on the combined com/net/org zones.
+Although some partitioning and smarter inserting might just do the trick.
 
 The goal is to being able to run this on medium sized virtual machines with just a few cores and a few gigabytes of
 ram. That should be enough for the Netherlands and most EU countries. We've not tried to see if this solution is 'web
@@ -52,8 +53,8 @@ This command should run forever. In case your certstream server is down it will 
 The webserver can be started with the command:
 ```python manage.py runserver```
 
-When you visit the web interface at http://localhost:8000/ you will see a blank JSON response. Use the following
-parameters to retrieve data: `http://localhost:8000/?domain=example&suffix=nl&period=365`
+When you visit the web interface at http://localhost:8001/ you will see a blank JSON response. Use the following
+parameters to retrieve data: `http://localhost:8001/?domain=example&suffix=nl&period=365`
 
 
 ## Further configuration options
@@ -123,19 +124,44 @@ Requirements for development are:
 - Compose
 - GNU make
 
+### Checking out the code
+
+This repository contains submodules, so after the Git clone this submodule should be initialized.
+
+    git clone git@github.com:internetstandards/Internet.nl-ct-log-subdomain-suggestions-api.git
+    git submodule update --init
+
+### Building the application
+
+Before running the application, or whenever code changes, the Docker images need to be built. For this run:
+
+    make build
+
+Running the build step before every command is recommended to ensure the images are up to date, that's why it's included in all the command below. It can be omitted if you know you don't need it.
+
 ### Running application
 
-To run the application for development run:
+To run the application for development use:
 
-    make run
+    make build run
 
-A web interface will be available at `http://localhost:8000`.
+This will start a full development stack with:
+
+  - uWSGI application
+  - ingest
+  - certstream server
+  - postgreSQL server
+  - database migration
+
+A web interface will be available at `http://localhost:8001`.
+
+Compose will watch for file changes and restart the required services accordingly.
 
 ### Linting
 
 Run these commands before checking in. These should all pass without error.
 
-    make lint
+    make build lint
 
 *notice*: this command autofixes trivial issues in formatting and updates the source files
 
@@ -143,16 +169,44 @@ Run these commands before checking in. These should all pass without error.
 
 To run the test suite use:
 
-    make test
+    make build test
+
+To rerun tests every time a file changes use:
+
+    make build test-watch
 
 ### Development shell
 
-To open a shell with all dependencies and development tools installed run:
+To open a shell with all dependencies and development tools installed, first bring the project up, then run:
 
-    make dev
+    make build dev
+
+From here you can run the `ctlssa` command to perform Django `./manage.py` functions like:
+
+    ctlssa makemigrations
+
+    ctlssa shell
+
+    ctlssa loadfixtures testdata
+
+    ctlssa bulk_ingest --file data.json
+
+For all commands run:
+
+    ctlssa --help
 
 ### Dependency management
 
 After changing requirements in any of the `.in` files update the `.txt` files using:
 
-    make requirements
+    make build requirements
+
+### Database shell (postgresql)
+
+    make dbshell
+
+### Reset
+
+If nothing else works, try resetting the project state by deleting all runtime state and caches using:
+
+    make mrproper

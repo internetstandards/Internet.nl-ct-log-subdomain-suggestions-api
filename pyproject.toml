@@ -3,7 +3,8 @@ requires-python = ">=3.10"
 dynamic = ["dependencies", "optional-dependencies"]
 name = "ctlssa"
 readme = "README.md"
-version = "1.0.0"
+# overwritten during CI build using VERSION/SETUPTOOLS_SCM_PRETEND_VERSION
+version = "0.0.0-dev0"
 
 [tool.setuptools.dynamic]
 dependencies = {file = ["requirements.txt"]}
@@ -13,7 +14,7 @@ optional-dependencies = {dev = {file = ["requirements-dev.txt"]}, deploy = {file
 ctlssa = "ctlssa.manage:main"
 
 [tool.setuptools.package-data]
-ctlssa = ["*.json"]
+"*" = ["*.json"]
 
 [build-system]
 requires = [

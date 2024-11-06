@@ -1,5 +1,7 @@
-import pytest
 import pathlib
+
+import pytest
+
 
 @pytest.fixture
 def testdata():
