@@ -1,4 +1,3 @@
-import pathlib
 from datetime import datetime
 
 from ctlssa.suggestions.logic.bulk_ingest import ingest_merklemap
