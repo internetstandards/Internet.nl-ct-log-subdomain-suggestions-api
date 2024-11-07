@@ -23,6 +23,9 @@ def add_domains(all_domains: List[str]) -> int:
         # prevent double requests and other behavior that causes redundancies to create duplicate records
         # this saves a TON of space. Run this first, before extracting the domain, a small optimization.
 
+        # some normalization as a data source might be polluted, merklemap is and there might be an off-day in ct too
+        domain = domain.lower().strip()
+
         # Warning: in bulk operations the deque is EXTREMELY slow. A longer deque with 100k records will slow down
         # imports to a near halt. So assume in bulk-imports that this deque is not needed.
         if domain in recently_added:
@@ -86,6 +89,9 @@ class CaseOptimizedBulkInsert:
 
     def add_domain(self, domain: str, processing_date: date):
         # wildcards do not exist in the hostname field, so no need to filter.
+
+        # some normalization as a data source might be polluted, merklemap is and there might be an off-day in ct too
+        domain = domain.lower().strip()
 
         # we can use this shortcut as there are no two level top level domains in the dutch zones
         # the partition method is the fastest:
