@@ -142,10 +142,15 @@ def test_add_domains(db, caplog):  # sourcery skip: extract-duplicate-method
     assert Domain.objects.count() == 0
 
     # the deque prevents insertion of the same domain twice in an N-number of domains added period.
-    add_domains(["test.nu.nl"])
-    add_domains(["test.nu.nl"])
-    add_domains(["test.nu.nl"])
+    add_domains([" TEST.nu.nl "])
+    add_domains([" TEST.nu.nl "])
+    add_domains([" TEST.nu.nl "])
     assert Domain.objects.count() == 1
+
+    # the domain has been normalized to lowercase and no spaces
+    assert Domain.objects.first().subdomain == "test"
+    assert Domain.objects.first().suffix == "nl"
+    assert Domain.objects.first().domain == "nu"
 
     # multiple domains can be added in one setting, this will add only one.
     added = add_domains(["test.nu.nl", "test2.nu.nl", "nu.nl"])

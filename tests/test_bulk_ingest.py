@@ -23,11 +23,16 @@ def test_bulk_ingesting(db):
     bulk_insert = CaseOptimizedBulkInsert()
 
     # test that the buffer works: the buffer is filled but not yet written as it does not reach the limit:
-    bulk_insert.add_domain("www.example.nl", datetime.now().date())
+    bulk_insert.add_domain(" SUBDOMAIN.EXAMPLE.NL ", datetime.now().date())
     assert Domain.objects.count() == 0
 
     bulk_insert.write_domains()
     assert Domain.objects.count() == 1
+
+    # the domain has been normalized to lowercase and no spaces
+    assert Domain.objects.first().subdomain == "subdomain"
+    assert Domain.objects.first().domain == "example"
+    assert Domain.objects.first().suffix == "nl"
 
     # make sure nothing sticks
     bulk_insert.write_domains()
