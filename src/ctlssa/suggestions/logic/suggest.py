@@ -45,4 +45,14 @@ def suggest_subdomains(domain: str, suffix: str = "nl", period_in_days: int = 36
             last_seen__gte=some_time_ago,
         ).values_list("subdomain", flat=True)
 
+    # use reverse string sorting to get subdomains in the correct order:
+    # a.amsterdam.basis.nl
+    # b.amsterdam.basis.nl
+    # a.zutphen.basis.nl
+    # this is very hard to understand for normal users, this might be sorting option in the UI but should not be
+    # the default.
+    # domains = set(query)
+    # sorted_data = [domain[::-1] for domain in domains]
+    # sorted_data.sort()
+    # [domain[::-1] for domain in sorted_data]
     return sorted(set(query))
