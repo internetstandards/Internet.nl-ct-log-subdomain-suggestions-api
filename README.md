@@ -169,11 +169,11 @@ Run these commands before checking in. These should all pass without error.
 
 To run the test suite use:
 
-    make build test
+    make build up test
 
 To rerun tests every time a file changes use:
 
-    make build test-watch
+    make build up test-watch
 
 ### Development shell
 
