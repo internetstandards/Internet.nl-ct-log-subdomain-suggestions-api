@@ -23,7 +23,7 @@ services:
       CTLSSA_DJANGO_DATABASE: production
       CTLSSA_DB_ENGINE: postgresql_psycopg2
       CTLSSA_DB_HOST: db
-      CTLSSA_CERTSTREAM_SERVER_URL: ws://certstream
+      CTLSSA_CERTSTREAM_SERVER_URL: ws://certstream:4000
     # uwsgi reloads on SIGTERM, so use SIGINT instead
     # https://uwsgi-docs.readthedocs.io/en/latest/Management.html#signals-for-controlling-uwsgi
     stop_signal: SIGINT
@@ -51,7 +51,7 @@ services:
       CTLSSA_DJANGO_DATABASE: production
       CTLSSA_DB_ENGINE: postgresql_psycopg2
       CTLSSA_DB_HOST: db
-      CTLSSA_CERTSTREAM_SERVER_URL: ws://certstream
+      CTLSSA_CERTSTREAM_SERVER_URL: ws://certstream:4000
     entrypoint: ctlssa
     command: ingest
     restart: always
