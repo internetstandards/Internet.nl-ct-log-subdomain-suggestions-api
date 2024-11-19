@@ -26,7 +26,7 @@ SECRET_KEY: str = os.environ.get("SECRET_KEY", "_dzlo^9d#ox6!7c9rju@=u8+4^sprqoc
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get("CTLSSA_ALLOWED_HOSTS", "").split(",")
 
 
 # Application definition
