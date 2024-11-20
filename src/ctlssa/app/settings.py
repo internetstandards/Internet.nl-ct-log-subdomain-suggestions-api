@@ -24,9 +24,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY: str = os.environ.get("SECRET_KEY", "_dzlo^9d#ox6!7c9rju@=u8+4^sprqocy3s*l*ejc2yr34@&98")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 
-ALLOWED_HOSTS = os.environ.get("CTLSSA_ALLOWED_HOSTS", "").split(",")
+CTLSSA_HOSTNAME = os.environ.get("CTLSSA_HOSTNAME", "localhost:8001")
+ALLOWED_HOSTS = os.environ.get("CTLSSA_ALLOWED_HOSTS", f"{CTLSSA_HOSTNAME}").split(",")
 
 
 # Application definition
