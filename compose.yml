@@ -19,17 +19,13 @@ services:
     ports:
       - 8001:8001
     environment:
-      DEBUG: "False"
-      CTLSSA_SECRET_KEY: '1'
-      CTLSSA_DJANGO_DATABASE: production
-      CTLSSA_DB_ENGINE: postgresql_psycopg2
-      CTLSSA_DB_HOST: db
-      CTLSSA_CERTSTREAM_SERVER_URL: ws://certstream:4000
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.ctlssa.rule='Host(`${CTLSSA_HOSTNAME}`) && PathPrefix(`/ctlssa`)"
-      - "traefik.http.routers.ctlssa.priority=20"
-      - "traefik.http.routers.ctlssa.entrypoints=websecure"
+      - DEBUG="False"
+      - CTLSSA_SECRET_KEY
+      - CTLSSA_DJANGO_DATABASE=production
+      - CTLSSA_DB_ENGINE=postgresql_psycopg2
+      - CTLSSA_DB_HOST=db
+      - CTLSSA_CERTSTREAM_SERVER_URL=ws://certstream:4000
+      - CTLSSA_HOSTNAMES
 
     # uwsgi reloads on SIGTERM, so use SIGINT instead
     # https://uwsgi-docs.readthedocs.io/en/latest/Management.html#signals-for-controlling-uwsgi
@@ -54,12 +50,12 @@ services:
     develop: *app_develop
     image: ghcr.io/internetstandards/ctlssa:latest
     environment:
-      DEBUG: "False"
-      CTLSSA_SECRET_KEY: '1'
-      CTLSSA_DJANGO_DATABASE: production
-      CTLSSA_DB_ENGINE: postgresql_psycopg2
-      CTLSSA_DB_HOST: db
-      CTLSSA_CERTSTREAM_SERVER_URL: ws://certstream:4000
+      - DEBUG="False"
+      - CTLSSA_SECRET_KEY
+      - CTLSSA_DJANGO_DATABASE=production
+      - CTLSSA_DB_ENGINE=postgresql_psycopg2
+      - CTLSSA_DB_HOST=db
+      - CTLSSA_CERTSTREAM_SERVER_URL=ws://certstream:4000
     entrypoint: ctlssa
     command: ingest
     restart: always
@@ -125,10 +121,10 @@ services:
     build:
       target: dev
     environment:
-      CTLSSA_SECRET_KEY: '1'
-      CTLSSA_DJANGO_DATABASE: production
-      CTLSSA_DB_ENGINE: postgresql_psycopg2
-      CTLSSA_DB_HOST: db
+      - CTLSSA_SECRET_KEY=1
+      - CTLSSA_DJANGO_DATABASE=production
+      - CTLSSA_DB_ENGINE=postgresql_psycopg2
+      - CTLSSA_DB_HOST=db
     volumes:
       - .:/src
       - ./.root:/root
