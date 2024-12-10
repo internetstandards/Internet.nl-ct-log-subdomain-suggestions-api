@@ -87,13 +87,21 @@ class CaseOptimizedBulkInsert:
         self.new_data = []
         self.auto_write_batch_size = settings.AUTO_WRITE_BATCH_SIZE
 
-    def add_domain(self, domain: str, processing_date: date):
-        # wildcards do not exist in the hostname field, so no need to filter.
-
+    def clean_domain(self, domain: str) -> str:
         # some normalization as a data source might be polluted, merklemap is and there might be an off-day in ct too
         domain = domain.lower().strip()
 
+        # some domains end with a dot, because DNS entries are stored like this. This is a slight leak/pollution in the
+        # dataset from merklemap.
+        return domain.removesuffix(".")
+
+    def add_domain(self, domain: str, processing_date: date):
+        # wildcards do not exist in the hostname field, so no need to filter.
+
+        domain = self.clean_domain(domain)
+
         # we can use this shortcut as there are no two level top level domains in the dutch zones
+        # this approach will fall apart in case of .co.uk domains
         # the partition method is the fastest:
         rest, delimiter, suffix = domain.rpartition(".")
         subdomain, delimiter, domain = rest.rpartition(".")
