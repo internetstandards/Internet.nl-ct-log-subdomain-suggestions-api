@@ -1,3 +1,4 @@
+from ctlssa.suggestions.logic.domains import CaseOptimizedBulkInsert
 from ctlssa.suggestions.logic.ingest import add_domains, certstream_callback
 from ctlssa.suggestions.models import Domain
 
@@ -159,3 +160,15 @@ def test_add_domains(db, caplog):  # sourcery skip: extract-duplicate-method
 
     # test if logging works correctly, disabled due to flooding
     # assert "ingesting" in caplog.text
+
+
+def test_merklemap_clean_domain():
+
+    cobi = CaseOptimizedBulkInsert()
+
+    # test removal of last dot in polluted data
+    assert cobi.clean_domain("test.nu.nl.") == "test.nu.nl"
+    assert cobi.clean_domain("test.nu.nl") == "test.nu.nl"
+
+    # test case and padding removal
+    assert cobi.clean_domain(" TEST.nu.nl  ") == "test.nu.nl"
