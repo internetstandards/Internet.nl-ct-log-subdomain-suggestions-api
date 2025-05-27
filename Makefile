@@ -63,8 +63,11 @@ testcase:
 # updates requirements.txt files when requirements.in files have changes
 requirements_files = $(subst .in,.txt,$(wildcard requirements*.in))
 requirements: ${requirements_files}
-${requirements_files}: %.txt: %.in
-	${dev} "pip-compile $< --output-file $@"
+requirements.txt: %.txt: %.in
+	${dev} "CUSTOM_COMPILE_COMMAND='make requirements' pip-compile $< --output-file $@"
+
+requirements-dev.txt requirements-deploy.txt: %.txt: %.in
+	${dev} "CUSTOM_COMPILE_COMMAND='make requirements' pip-compile --constraint requirements.txt $< --output-file $@"
 
 # build docker container images
 .PHONY: build

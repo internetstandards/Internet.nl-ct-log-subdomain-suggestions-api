@@ -1,7 +1,7 @@
 colorlog
 certstream
 tldextract
-django<5
+django<6
 python-xz
 pysimdjson
 

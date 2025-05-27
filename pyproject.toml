@@ -7,8 +7,8 @@ readme = "README.md"
 version = "0.0.0-dev0"
 
 [tool.setuptools.dynamic]
-dependencies = {file = ["requirements.txt"]}
-optional-dependencies = {dev = {file = ["requirements-dev.txt"]}, deploy = {file = ["requirements-deploy.txt"]}}
+dependencies = {file = ["requirements.in"]}
+optional-dependencies = {dev = {file = ["requirements-dev.in"]}, deploy = {file = ["requirements-deploy.in"]}}
 
 [project.scripts]
 ctlssa = "ctlssa.manage:main"

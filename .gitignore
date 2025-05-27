@@ -11,3 +11,8 @@ suggestions_domain_25_10_2024*
 .root/
 *.egg-info
 .build
+# .envrc state directory
+.direnv
+# nix build output
+result
+nixos.qcow2
