@@ -24,7 +24,7 @@ services:
       - CTLSSA_DJANGO_DATABASE=production
       - CTLSSA_DB_ENGINE=postgresql_psycopg2
       - CTLSSA_DB_HOST=db
-      - CTLSSA_CERTSTREAM_SERVER_URL=ws://certstream:4000
+      - CTLSSA_CERTSTREAM_SERVER_URL=ws://certstream:8080
       - CTLSSA_HOSTNAMES
 
     # uwsgi reloads on SIGTERM, so use SIGINT instead
@@ -55,7 +55,7 @@ services:
       - CTLSSA_DJANGO_DATABASE=production
       - CTLSSA_DB_ENGINE=postgresql_psycopg2
       - CTLSSA_DB_HOST=db
-      - CTLSSA_CERTSTREAM_SERVER_URL=ws://certstream:4000
+      - CTLSSA_CERTSTREAM_SERVER_URL=ws://certstream:8080
     entrypoint: ctlssa
     command: ingest
     restart: always
@@ -74,13 +74,21 @@ services:
 
   certstream:
     build:
-      context: vendor/certstream
-    image: ghcr.io/internetstandards/certstream:latest
+      context: vendor/certstream-server-go
+      # multistage  results in a smaller image size
+      dockerfile: Dockerfile_multistage
+    image: ghcr.io/internetstandards/certstream-server-go:latest
+    # override entrypoint until fix is released:
+    # https://github.com/d-Rickyy-b/certstream-server-go/commit/b077aee823c3db04f203741ad6e96529a8e923a7
+    entrypoint:
+      - /app/certstream-server-go
+      - --config
+      - /app/config/config.yaml
     environment:
-      LOG_LEVEL: error
+      CERTSTREAM_PROMETHEUS_ENABLED: true
     restart: always
     healthcheck:
-      test: wget -q 127.0.0.1:4000 -O /dev/null
+      test: wget -q http://127.0.0.1:8080/metrics -O /dev/null
       interval: 5m
       start_period: 30s
       start_interval: 1s
