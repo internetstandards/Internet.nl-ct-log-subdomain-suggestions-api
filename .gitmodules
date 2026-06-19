@@ -1,3 +1,3 @@
-[submodule "vendor/certstream"]
-	path = vendor/certstream
-	url = https://github.com/CaliDog/certstream-server.git
+[submodule "vendor/certstream-server-go"]
+	path = vendor/certstream-server-go
+	url = https://github.com/d-Rickyy-b/certstream-server-go.git
